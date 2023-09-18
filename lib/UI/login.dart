@@ -1,7 +1,9 @@
 import 'package:d3_express/main.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:d3_express/UI/Home.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 class Login extends StatefulWidget {
   const Login({
     Key? key,
@@ -18,7 +20,47 @@ class _LoginState extends State<Login> {
   bool _isPasswordVisible = false;
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  bool isLoggedIn = false;
+  @override
+  void initState() {
+    super.initState();
+    autoLogIn();
+  }
+  void autoLogIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? userId = prefs.getString('username');
+    if (userId != null) {
+      setState(() {
+        isLoggedIn = true;
+      });
+      return;
+    }
+  }
+  Future<void> _handleLogin() async {
+    final username = _controllerUsername.text;
+    final password = _controllerPassword.text;
+    try {
+      final response = await http.post(
+        Uri.parse('127.0.0.1/login/'), // Replace with your login API endpoint
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'username': username, 'password': password}),
+      );
 
+      if (response.statusCode == 200) {
+        print(username);
+        print(password);
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('username', "True");
+        setState(() {
+          isLoggedIn = true;
+        });
+      } else {
+        throw Exception('Login failed');
+      }
+    } catch (e) {
+      throw Exception('Network error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +68,10 @@ class _LoginState extends State<Login> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: CustomAppBar( type: '1'),
-      body: Form(
+      body:
+      isLoggedIn ?   MyHomePage()  :
+
+      Form(
         key: _formKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(30.0),
@@ -61,7 +106,7 @@ class _LoginState extends State<Login> {
                   if (value == null || value.isEmpty) {
                     return "Please enter username.";
                   }
-
+                  return null;
                 },
               ),
               const SizedBox(height: 10),
@@ -93,6 +138,7 @@ class _LoginState extends State<Login> {
                   if (value == null || value.isEmpty) {
                     return "Please enter password.";
                   }
+                  return null;
 
                 },
               ),
@@ -106,17 +152,18 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: _handleLogin,
+    // () {
                       // if (_controllerUsername.text.isNotEmpty){
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return const MyHomePage();
-                            },
-                          ),
-                        );
-                      },
+                      //   Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) {
+                      //         return const MyHomePage();
+                      //       },
+                      //     ),
+                      //   );
+                      // },
 
 
                     // },
