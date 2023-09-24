@@ -50,6 +50,7 @@ class _Add_orderState extends State<Add_order> {
       "SenderPhone": _controllerSenderTelephone.text,
       "receiverName": _controllerReceiverName.text,
       "receiverAddress": selectedValueReceiverAddress,
+      "SenderAddress": userId,
       "receiverPhone": _controllerReceiverTelephone.text,
       "waybillno": _controllerWayBillNo.text,
       "price": _controllerPrice.text,
@@ -72,7 +73,7 @@ class _Add_orderState extends State<Add_order> {
       print(response);
       print(7878);
       if (response.statusCode == 200) {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => MyHomePage()));
       } else {
         // Request failed with an error
@@ -102,7 +103,7 @@ class _Add_orderState extends State<Add_order> {
       ),
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),  
+              child: CircularProgressIndicator(),
             )
           : Form(
               key: _formKey,

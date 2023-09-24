@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print(waybill);
     print(status);
     final apiUrl =
-        'https://d3Shop.pythonanywhere.com/order/stat/$waybill/$status'; // Replace with your API URL
+        'https://d3Shop.pythonanywhere.com/order/stat/$waybill/$status/$userId'; // Replace with your API URL
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
