@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      userId = prefs.getString('address')!;
+      userId = prefs.getString('address')?? "";
     });
     return;
   }
@@ -125,6 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
             title: Text('D3 Express $userId '),
+            automaticallyImplyLeading: false,
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
             actions: [
               IconButton(

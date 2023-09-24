@@ -44,6 +44,7 @@ class _Add_orderState extends State<Add_order> {
 
   Future<void> sendDataToBackend() async {
     const String apiUrl = 'http://d3shop.pythonanywhere.com/order';
+    print(userId);
 
     final Map<String, dynamic> data = {
       "SenderName": _controllerSenderName.text,
@@ -72,8 +73,9 @@ class _Add_orderState extends State<Add_order> {
       );
       print(response);
       print(7878);
+      print(response.statusCode);
       if (response.statusCode == 200) {
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => MyHomePage()));
       } else {
         // Request failed with an error

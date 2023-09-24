@@ -28,13 +28,16 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     autoLogIn();
-    fetch();
   }
 
   void autoLogIn() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userId = prefs.getString('address');
-    if (userId != "") {
+    if (  userId!="") {
+      fetch();
+      print(userId);
+      print(545454);
+
       setState(() {
         isLoggedIn = true;
       });
@@ -102,22 +105,21 @@ class _LoginState extends State<Login> {
     });
   }
 
-  String userId = "";
+  var userId = "";
 
   void fetch() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    final SharedPreferences prefs = await SharedPreferences.getInstance(); 
     setState(() {
-      userId = prefs.getString('address')!;
-    });
+      userId = prefs.getString('address') ?? "";
+    }); 
+
     return;
   }
 
   @override
-  Widget build(BuildContext context) {
-    // address = fetch() ?? "Null";
+  Widget build(BuildContext context) { 
     if (isLoggedIn) {
-      return MyHomePage();
+      return const MyHomePage();
     } else {
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
